@@ -70,9 +70,11 @@ public class Game {
 	}
 	
 	public void update(long deltaTime) {
+		if (deltaTime < 0)
+			throw new IllegalArgumentException("deltaTime must be >= 0");
 		elapsedTime += deltaTime;
 		long speed = getCurrentSpeed();
-		if (elapsedTime > speed) {
+		while (elapsedTime > speed) {
 			elapsedTime -= speed;
 			currentBitCoins += getCurrentAmount();
 		}

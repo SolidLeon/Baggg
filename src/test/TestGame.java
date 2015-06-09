@@ -292,7 +292,7 @@ public class TestGame {
 		game.update(30_000L); // 0 updates
 		assertEquals(0, game.getCurrentBitCoins());
 	}
-	
+
 	@Test
 	public void testUpdate5() {
 		Game game = new Game();
@@ -302,5 +302,26 @@ public class TestGame {
 		game.addComponent("RAM");
 		game.update(30_001L); // exact one update
 		assertEquals(60, game.getCurrentBitCoins());
+	}
+
+	@Test
+	public void testUpdate6() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.update(60_001L); // 2 updates
+		assertEquals(120, game.getCurrentBitCoins());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testUpdateNegative() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.update(-1); // exact one update
 	}
 }
