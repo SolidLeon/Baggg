@@ -110,7 +110,7 @@ public class TestComponent {
 	}
 	
 	@Test
-	public void testGetPrice() {
+	public void testGetPriceNextUpgrade() {
 		BagggComponent c = new BagggComponent("CPU",
 				10000L, //Pf
 				2500L, //Pv

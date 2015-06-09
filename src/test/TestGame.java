@@ -324,4 +324,175 @@ public class TestGame {
 		game.addComponent("RAM");
 		game.update(-1); // exact one update
 	}
+	
+	@Test
+	public void testSetCurrentBitCoinsMin() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(0);
+		assertEquals(0, game.getCurrentBitCoins());
+	}
+
+	@Test
+	public void testSetCurrentBitCoinsMid() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(100);
+		assertEquals(100, game.getCurrentBitCoins());
+	}
+
+	@Test
+	public void testSetCurrentBitCoinsMax() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(Long.MAX_VALUE);
+		assertEquals(Long.MAX_VALUE, game.getCurrentBitCoins());
+	}
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetCurrentBitCoins() {
+		Game game = new Game();
+		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(-500);
+	}
+
+	@Test
+	public void testBuyUpgradeInsufficientBC() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(0);
+		assertFalse(game.buyUpgrade("CPU"));
+	}
+
+	@Test
+	public void testBuyUpgradeOK() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.setCurrentBitCoins(14429L);
+		assertTrue(game.buyUpgrade("CPU"));
+	}
+	@Test
+	public void testBuyUpgradeOKLevel() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.getComponentById("CPU").setLevel(5);
+		game.setCurrentBitCoins(14429L);
+		game.buyUpgrade("CPU");
+		assertEquals(6L, game.getComponentById("CPU").getLevel());
+	}
+
+	@Test
+	public void testBuyUpgradeOKBitCoins() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.getComponentById("CPU").setLevel(5);
+		game.setCurrentBitCoins(14429L);
+		game.buyUpgrade("CPU");
+		assertEquals(0L, game.getCurrentBitCoins());
+	}
+	
+	@Test
+	public void testBuyUpgradeInvalidID() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.getComponentById("CPU").setLevel(5);
+		game.setCurrentBitCoins(14429L);
+		assertFalse(game.buyUpgrade("FOO"));
+	}
+	
+
+	@Test
+	public void testBuyUpgradeInvalidID2() {
+		BagggComponent c = new BagggComponent("CPU",
+				10000L, //Pf
+				2500L, //Pv
+				1.10, //p ... 1.10 => 110% INCREASE
+				60_000L, //ms
+				-2000L, //speed per upgrade
+				8 * 1024L, // base amount in bits
+				8 * 1024L //amount per upgrade
+				);
+		Game game = new Game();
+		game.registerComponent(c);
+		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.addComponent("CPU");
+		game.addComponent("RAM");
+		game.getComponentById("CPU").setLevel(5);
+		game.setCurrentBitCoins(14429L);
+		assertFalse(game.buyUpgrade(null));
+	}
+
 }

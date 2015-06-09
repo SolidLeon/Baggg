@@ -87,5 +87,22 @@ public class Game {
 	public long getCurrentBitCoins() {
 		return currentBitCoins;
 	}
+
+	public boolean buyUpgrade(String id) {
+		BagggComponent c = getComponentById(id);
+		if (c == null) return false;
+		long price = c.getPriceNextUpgrade();
+		if (price > currentBitCoins)
+			return false;
+		currentBitCoins -= price;
+		c.setLevel(c.getLevel() + 1);
+		return true;
+	}
+
+	public void setCurrentBitCoins(long currentBitCoins) {
+		if (currentBitCoins < 0)
+			throw new IllegalArgumentException("currentBitCoins must be >= 0");
+		this.currentBitCoins = currentBitCoins;
+	}
 }
 
