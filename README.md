@@ -1,0 +1,2 @@
+# Baggg
+Bitcoin Idle Game
