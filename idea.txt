@@ -1,0 +1,33 @@
+Baggg
+
+You are a bitcoin miner.
+Your goal is to mine as much as possible.
+To achieve this, you need to upgrade your PC, to increase throughput.
+You can increase the speed at which you mine and the amount you mine with each update.
+Measure: n B(it)C(oins) / second
+Updates occur in realtime, so it can happen that 0.5 seconds elapsed or 50 seconds.
+Updates should be processed one-by-one.
+
+
+
+Speed increasing components:
+	CPU
+		base price: 100$
+		price per upgrade: 100$ + (25$ * pow(10%, nextlevel))
+		base speed: 60s
+		speed per upgrade: -2s
+	GPU
+		base price: 500$
+		price per upgrade: 500$ + (100$ * pow(25%, nextlevel))
+		base speed: 30s
+		speed per upgrade: -1s
+		
+Amount increasing components:
+	RAM
+		base price: 5$
+		price per upgrade: 5$ + (2$ * pow(12%, nextLevel))
+		base amount: 8 kB
+		amount per upgrade: 8 kB
+	
+Upgrades
+	BOT -> DOUBLE EVERYTHING (as if there was another PC, exponentially)
