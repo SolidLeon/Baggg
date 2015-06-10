@@ -72,7 +72,12 @@ public class BagggComponent {
 	}
 
 	public long getCurrentSpeed() {
-		return level == 0 ? 0L : baseSpeed + speedPerUpgrade * level;
+		if (level == 0)
+			return 0L;
+		long speed = baseSpeed + speedPerUpgrade * level;
+		if (speed < 1)
+			speed = 1;
+		return speed;
 	}
 
 	public long getCurrentAmount() {

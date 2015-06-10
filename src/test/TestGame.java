@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import baggg.game.BagggComponent;
 import baggg.game.Game;
+import baggg.game.component.CPUFactory;
+import baggg.game.component.RAMFactory;
 
 public class TestGame {
 
@@ -20,11 +22,28 @@ public class TestGame {
 		Game game = new Game();
 		assertEquals(0L, game.getCurrentSpeed());
 	}
+	
+	@Test
+	public void testGetCurrentSpeedOneComponent() {
+		Game game = new Game();
+		game.registerComponent(new CPUFactory().create());
+		game.addComponent("CPU");
+		assertEquals(game.getComponentById("CPU").getCurrentSpeed(), game.getCurrentSpeed());
+	}
+	
+	@Test
+	public void testGetCurrentSpeedTwoComponent() {
+		Game game = new Game();
+		game.registerComponent(new CPUFactory().create());
+		game.addComponent("CPU");
+		game.addComponent("CPU");
+		assertEquals(game.getComponentById("CPU").getCurrentSpeed(), game.getCurrentSpeed());
+	}
 
 	@Test
 	public void testRegisterComponent() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("GPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		assertEquals(3, game.getComponents().size());
@@ -33,8 +52,8 @@ public class TestGame {
 	@Test(expected=RuntimeException.class)
 	public void testRegisterComponentDuplicate() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 	}
 	
@@ -42,7 +61,7 @@ public class TestGame {
 	public void testGetComponentById() {
 		Game game = new Game();
 		BagggComponent expected = new BagggComponent("GPU", 0, 0, 0.0, 100L, 0L, 0L, 0L);
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(expected);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		assertEquals(expected, game.getComponentById("GPU"));
@@ -52,7 +71,7 @@ public class TestGame {
 	public void testGetComponentByIdNull() {
 		Game game = new Game();
 		BagggComponent expected = new BagggComponent("GPU", 0, 0, 0.0, 100L, 0L, 0L, 0L);
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(expected);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		assertNull(game.getComponentById(null));
@@ -73,7 +92,7 @@ public class TestGame {
 	public void testGetComponentByIdTrimEmpty() {
 		Game game = new Game();
 		BagggComponent expected = new BagggComponent("GPU", 0, 0, 0.0, 100L, 0L, 0L, 0L);
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(expected);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		assertNull(game.getComponentById("    "));
@@ -84,7 +103,7 @@ public class TestGame {
 	public void testGetComponentByIdNotFound() {
 		Game game = new Game();
 		BagggComponent expected = new BagggComponent("GPU", 0, 0, 0.0, 100L, 0L, 0L, 0L);
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(expected);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 100L, 0L, 0L, 0L));
 		assertNull(game.getComponentById("FOO"));
@@ -93,7 +112,7 @@ public class TestGame {
 	@Test
 	public void testAddComponent() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 0L, 50L));
 		game.addComponent("CPU");
 		game.addComponent("CPU");
@@ -104,7 +123,7 @@ public class TestGame {
 	@Test
 	public void testComponentLevel() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 0L, 50L));
 		game.addComponent("CPU");
 		game.addComponent("CPU");
@@ -115,40 +134,40 @@ public class TestGame {
 	@Test
 	public void testGetCurrentSpeed1() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 0L, 50L));
 		game.addComponent("CPU");
 		game.addComponent("CPU");
 		game.addComponent("CPU");
-		assertEquals(100L, game.getCurrentSpeed());
+		assertEquals(game.getComponentById("CPU").getCurrentSpeed(), game.getCurrentSpeed());
 	}
 	
 	@Test
 	public void testGetCurrentSpeed2() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, -10L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 0L, 50L));
 		game.addComponent("CPU");
 		game.addComponent("CPU");
 		game.addComponent("CPU");
-		assertEquals(100L + -10L * 3, game.getCurrentSpeed());
+		assertEquals(game.getComponentById("CPU").getCurrentSpeed(), game.getCurrentSpeed());
 	}
 	
 	@Test
 	public void testGetCurrentAmount1() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 0L, 50L));
 		game.addComponent("CPU");
 		game.addComponent("CPU");
 		game.addComponent("RAM");
-		assertEquals(50L, game.getCurrentAmount());
+		assertEquals(game.getComponentById("RAM").getCurrentAmount() + game.getComponentById("CPU").getCurrentAmount(), game.getCurrentAmount());
 	}
 
 	@Test
 	public void testGetCurrentAmount2() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 100L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("RAM");
 		game.addComponent("RAM");
@@ -158,49 +177,68 @@ public class TestGame {
 	}
 	
 	@Test
-	public void testGetBitCoinsMined() {
+	public void testGetBitCoinsMined_Min() {
 		Game game = new Game();
 		assertEquals(0, game.getBitCoinsMined(0L));
 	}
 	
 	@Test
-	public void testGetBitCoinsMined2() {
+	public void testGetBitCoinsMined_FullCycle() {
 		Game game = new Game();
 		assertEquals(0, game.getBitCoinsMined(60_000L));
 	}
 
 	@Test
-	public void testGetBitCoinsMined3() {
+	public void testGetBitCoinsMined_NoFullCycle() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
-		assertEquals(0, game.getBitCoinsMined(60_000L));
+		assertEquals(0, game.getBitCoinsMined(30_000L));
 	}
 
 	@Test
-	public void testGetBitCoinsMined4() {
+	public void testGetBitCoinsMined() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
-		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
+		game.registerComponent(new CPUFactory().create());
+		game.registerComponent(new RAMFactory().create());
 		game.addComponent("RAM");
-		assertEquals(0, game.getBitCoinsMined(60_000L));
+		long elapsed = 60_000L;
+		double updates = elapsed / game.getCurrentSpeed();
+		int iu = (int) updates;
+		assertEquals(game.getCurrentAmount() * iu, game.getBitCoinsMined(elapsed));
 	}
 
+	/**
+	 * <h3>Test {@link Game#getBitCoinsMined(long)}</h3>
+	 * <p>
+	 * Setup:
+	 * <ul>
+	 * 	<li>x1 {@link CPUFactory#create()}</li>
+	 * 	<li>x1 RAM</li>
+	 * 	<li>120,001 ms elapsed time -> current speed should be 60,000 ms due to CPU, so we have two bitcoin gains</li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * The combined {@link BagggComponent#getCurrentAmount()} times 2 of both components should be returned from {@link Game#getBitCoinsMined(long)}
+	 * </p> 
+	 */
 	@Test
 	public void testGetBitCoinsMined5() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
-		assertEquals(120L, game.getBitCoinsMined(60_000L));
+		long earningsCPU = game.getComponentById("CPU").getCurrentAmount();
+		long earningsRAM = game.getComponentById("RAM").getCurrentAmount();
+		assertEquals(2 * (earningsCPU + earningsRAM), game.getBitCoinsMined(120_001L));
 	}
 
 	@Test
 	public void testGetBitCoinsMined6() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -209,7 +247,7 @@ public class TestGame {
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetBitCoinsMinedInvalid() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -219,7 +257,7 @@ public class TestGame {
 	@Test
 	public void testGetElapsedTime() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -229,7 +267,7 @@ public class TestGame {
 	@Test
 	public void testGetElapsedTime2() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -240,41 +278,42 @@ public class TestGame {
 	@Test
 	public void testGetElapsedTimeWithUpdate() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
 		game.update(60_000L); //remain: 30_000 because update immediatly subtract current speed and does an mining update
-		assertEquals(30_000L, game.getElapsedTime());
+		assertEquals(60_000L - game.getCurrentSpeed(), game.getElapsedTime());
 	}
 
 	@Test
 	public void testUpdate() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
 		game.update(60_000L); // 1 update
-		assertEquals(60, game.getCurrentBitCoins());
+		assertEquals(game.getComponentById("CPU").getCurrentAmount() + game.getComponentById("RAM").getCurrentAmount(), game.getCurrentBitCoins());
 	}
 
 	@Test
 	public void testUpdate2() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
-		game.update(60_000L); // 2 updates
-		game.update(1_000L); // 2 updates
-		assertEquals(120, game.getCurrentBitCoins());
+		game.update(game.getCurrentSpeed()); //this call does not generate an update, since the elapsed time is <= speed and not > speed
+		game.update(100); // some arbritary number to issue an update
+		long earningsPerUpdate = game.getCurrentAmount();
+		assertEquals(earningsPerUpdate, game.getCurrentBitCoins());
 	}
 
 	@Test
 	public void testUpdate3() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -285,7 +324,7 @@ public class TestGame {
 	@Test
 	public void testUpdate4() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -296,29 +335,33 @@ public class TestGame {
 	@Test
 	public void testUpdate5() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
-		game.update(30_001L); // exact one update
-		assertEquals(60, game.getCurrentBitCoins());
+		int updates = 1;
+		game.update(updates * game.getCurrentSpeed() + 1); // 2 updates
+		long earningsPerUpdate = game.getCurrentAmount();
+		assertEquals(updates * earningsPerUpdate, game.getCurrentBitCoins());
 	}
 
 	@Test
 	public void testUpdate6() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
-		game.update(60_001L); // 2 updates
-		assertEquals(120, game.getCurrentBitCoins());
+		int updates = 2;
+		game.update(updates * game.getCurrentSpeed() + 1); // 2 updates
+		long earningsPerUpdate = game.getCurrentAmount();
+		assertEquals(updates * earningsPerUpdate, game.getCurrentBitCoins());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testUpdateNegative() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -328,7 +371,7 @@ public class TestGame {
 	@Test
 	public void testSetCurrentBitCoinsMin() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -339,7 +382,7 @@ public class TestGame {
 	@Test
 	public void testSetCurrentBitCoinsMid() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -350,7 +393,7 @@ public class TestGame {
 	@Test
 	public void testSetCurrentBitCoinsMax() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -360,7 +403,7 @@ public class TestGame {
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetCurrentBitCoins() {
 		Game game = new Game();
-		game.registerComponent(new BagggComponent("CPU", 0, 0, 0.0, 30_000L, 0L, 0L, 0L));
+		game.registerComponent(new CPUFactory().create());
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
 		game.addComponent("CPU");
 		game.addComponent("RAM");
@@ -369,16 +412,7 @@ public class TestGame {
 
 	@Test
 	public void testBuyUpgradeInsufficientBC() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
-		
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
@@ -390,16 +424,7 @@ public class TestGame {
 
 	@Test
 	public void testBuyUpgradeOK() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
-		
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
@@ -410,15 +435,7 @@ public class TestGame {
 	}
 	@Test
 	public void testBuyUpgradeOKLevel() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
@@ -432,15 +449,7 @@ public class TestGame {
 
 	@Test
 	public void testBuyUpgradeOKBitCoins() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
@@ -454,15 +463,7 @@ public class TestGame {
 	
 	@Test
 	public void testBuyUpgradeInvalidID() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));
@@ -476,15 +477,7 @@ public class TestGame {
 
 	@Test
 	public void testBuyUpgradeInvalidID2() {
-		BagggComponent c = new BagggComponent("CPU",
-				10000L, //Pf
-				2500L, //Pv
-				1.10, //p ... 1.10 => 110% INCREASE
-				60_000L, //ms
-				-2000L, //speed per upgrade
-				8 * 1024L, // base amount in bits
-				8 * 1024L //amount per upgrade
-				);
+		BagggComponent c = new CPUFactory().create();
 		Game game = new Game();
 		game.registerComponent(c);
 		game.registerComponent(new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L));

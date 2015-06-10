@@ -84,6 +84,10 @@ public class Game {
 		return elapsedTime;
 	}
 
+	/**
+	 * 
+	 * @return amount of bitcoins currently owned
+	 */
 	public long getCurrentBitCoins() {
 		return currentBitCoins;
 	}

@@ -15,23 +15,24 @@ import baggg.game.BagggComponent;
  * 		<th>Amount per upgrade</th>
  * 	</tr>
  *  <tr>
- *    	<td>CPU</td>
- *    	<td>BC 100.00</td>
- *    	<td>BC 25.00</td>
- *    	<td>110%</td>
- *    	<td>60,000 ms</td>
- *    	<td>-2,000 ms</td>
- *    	<td>BC 8,192.-</td>
- *    	<td>BC 8,192.-</td>
+ *    	<td>RAM</td>
+ *    	<td>BC 0.00</td>
+ *    	<td>BC 0.00</td>
+ *    	<td>0%</td>
+ *    	<td>0 ms</td>
+ *    	<td>-0 ms</td>
+ *    	<td>BC 50</td>
+ *    	<td>BC 10</td>
  *  </tr>
  * </table>
  * @author SolidLeon
  *
  */
-public class CPUFactory implements IComponentFactory {
+public class RAMFactory implements IComponentFactory {
+
 	@Override
 	public BagggComponent create() {
-		BagggComponent c = new BagggComponent("CPU", 100_00L, 25_00L, 1.10, 60_000L, -2000L, 8 * 1024L, 8 * 1024L);
-		return c;
+		return new BagggComponent("RAM", 0, 0, 0.0, 0L, 0L, 50L, 10L);
 	}
+
 }
